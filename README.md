@@ -13,7 +13,7 @@ Este projeto é um sistema web desenvolvido em Django para gerenciar eventos aca
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://www.youtube.com/watch?v=xtwls2XmJUI](https://www.youtube.com/watch?v=xtwls2XmJUI)
+    git clone [https://github.com/miguellferraz/SGEA-Project](https://github.com/miguellferraz/SGEA-Project)
     cd sgea-project
     ```
 

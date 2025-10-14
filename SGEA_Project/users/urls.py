@@ -16,6 +16,6 @@ urlpatterns = [
     # Funcionalidade 2: Autenticação de Usuários (Logout)
     # Redireciona para a página de login após logout
     path('logout/', auth_views.LogoutView.as_view(
-        next_page='login' 
+        next_page='/'
     ), name='logout'),
 ]

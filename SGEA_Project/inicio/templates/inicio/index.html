@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -15,7 +16,10 @@
             <div class="space-x-4">
                 {% if is_authenticated %}
                     <span class="text-white text-sm">Olá, {{ user.username }}!</span>
-                    <a href="{% url 'logout' %}" class="px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-150">Sair</a>
+                    <form class="inline" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition duration-200">Sair</button>
+                    </form>
                     
                     {% if user.perfil == 'ORGANIZADOR' %}
                         <a href="{% url 'admin:index' %}" class="px-3 py-2 text-indigo-100 border border-indigo-100 rounded-lg hover:bg-indigo-700 transition duration-150">Admin</a>

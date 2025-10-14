@@ -6,6 +6,11 @@ body {
     padding: 0;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
+    background-color: #f8fafc; 
+}
+
+nav { 
+    background-color: #4f46e5; 
 }
 
 /* Estilo para links de navegação globais */
@@ -41,11 +46,4 @@ textarea {
     width: 100%;
 }
 
-body { 
-    font-family: 'Inter', sans-serif; 
-    background-color: #f8fafc; 
-}
 
-nav { 
-    background-color: #4f46e5; 
-}

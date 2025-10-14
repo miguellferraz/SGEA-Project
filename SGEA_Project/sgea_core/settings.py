@@ -120,6 +120,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    os.path.join(BASE_DIR, 'sgea_core', 'static'),
 ]
 
