@@ -4,29 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGEA - Criar Evento</title>
+    <title>SGEA - Formulário de Evento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body class="bg-gray-100">
     <nav class="p-4 shadow-lg flex justify-between items-center text-white bg-indigo-700">
-        <h1 class="text-xl font-bold">SGEA - Criação de Evento</h1>
+        <h1 class="text-xl font-bold">SGEA - Formulário de Evento</h1>
         <a href="{% url 'events:event_list' %}" class="text-sm hover:text-indigo-200">← Voltar para Eventos</a>
     </nav>
 
     <main class="flex items-center justify-center min-h-screen pt-10 pb-10">
         <div class="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-2xl border border-gray-100">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">Novo Evento Acadêmico</h2>
-            
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">Dados do Evento</h2>
+
             <form method="post" class="space-y-6">
                 {% csrf_token %}
-                
+
                 {% if form.non_field_errors %}
                     <div class="errorlist">{{ form.non_field_errors }}</div>
                 {% endif %}
 
                 <div class="grid md:grid-cols-2 gap-6">
-                    
+
+                    <div class="md:col-span-2">
+                        <label for="{{ form.nome_evento.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ form.nome_evento.label }}
+                        </label>
+                        {{ form.nome_evento }}
+                        {% if form.nome_evento.errors %}<div class="error-text">{{ form.nome_evento.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="{{ form.apresentador.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ form.apresentador.label }}
+                        </label>
+                        {{ form.apresentador }}
+                        {% if form.apresentador.errors %}<div class="error-text">{{ form.apresentador.errors }}</div>{% endif %}
+                    </div>
+
                     <div class="md:col-span-2">
                         <label for="{{ form.tipo_evento.id_for_label }}" class="block text-sm font-medium text-gray-700">
                             {{ form.tipo_evento.label }}
@@ -34,7 +50,7 @@
                         {{ form.tipo_evento }}
                         {% if form.tipo_evento.errors %}<div class="error-text">{{ form.tipo_evento.errors }}</div>{% endif %}
                     </div>
-                    
+
                     <div>
                         <label for="{{ form.data_inicial.id_for_label }}" class="block text-sm font-medium text-gray-700">
                             {{ form.data_inicial.label }}
@@ -52,11 +68,19 @@
                     </div>
 
                     <div>
-                        <label for="{{ form.horario.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.horario.label }}
+                        <label for="{{ form.horario_inicio.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Horário de Início
                         </label>
-                        {{ form.horario }}
-                        {% if form.horario.errors %}<div class="error-text">{{ form.horario.errors }}</div>{% endif %}
+                        {{ form.horario_inicio }}
+                        {% if form.horario_inicio.errors %}<div class="error-text">{{ form.horario_inicio.errors }}</div>{% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.horario_fim.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Horário de Fim
+                        </label>
+                        {{ form.horario_fim }}
+                        {% if form.horario_fim.errors %}<div class="error-text">{{ form.horario_fim.errors }}</div>{% endif %}
                     </div>
 
                     <div>
@@ -66,7 +90,7 @@
                         {{ form.qtd_participantes }}
                         {% if form.qtd_participantes.errors %}<div class="error-text">{{ form.qtd_participantes.errors }}</div>{% endif %}
                     </div>
-                    
+
                     <div class="md:col-span-2">
                         <label for="{{ form.local.id_for_label }}" class="block text-sm font-medium text-gray-700">
                             {{ form.local.label }}
@@ -79,7 +103,7 @@
 
                 <button type="submit" 
                         class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    Criar Evento
+                    Salvar Evento
                 </button>
             </form>
         </div>

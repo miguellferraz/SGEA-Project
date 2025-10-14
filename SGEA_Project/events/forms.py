@@ -8,10 +8,13 @@ class EventForm(forms.ModelForm):
         # Apenas os campos preenchidos pelo usuário são listados.
         # 'organizador_responsavel' será preenchido automaticamente na View.
         fields = [
+            'nome_evento', 
+            'apresentador',    
             'tipo_evento', 
             'data_inicial', 
             'data_final', 
-            'horario', 
+            'horario_inicio',
+            'horario_fim',  
             'local', 
             'qtd_participantes'
         ]
@@ -20,5 +23,6 @@ class EventForm(forms.ModelForm):
         widgets = {
             'data_inicial': forms.DateInput(attrs={'type': 'date'}),
             'data_final': forms.DateInput(attrs={'type': 'date'}),
-            'horario': forms.TimeInput(attrs={'type': 'time'}),
+            'horario_inicio': forms.TimeInput(attrs={'type': 'time'}), # Alterado
+            'horario_fim': forms.TimeInput(attrs={'type': 'time'}),
         }

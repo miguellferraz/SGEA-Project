@@ -1,6 +1,6 @@
 # SGEA - Sistema de Gestão de Eventos Acadêmicos
 
-Este projeto é um sistema web desenvolvido em Django para gerenciar eventos acadêmicos, como parte da avaliação da disciplina de [Nome da Disciplina].
+Este projeto é um sistema web desenvolvido em Django para gerenciar eventos acadêmicos, como parte da avaliação da disciplina de Programação pra Web.
 
 ## Funcionalidades Principais
 

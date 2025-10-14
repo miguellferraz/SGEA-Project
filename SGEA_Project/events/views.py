@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -24,7 +24,7 @@ class OrganizadorRequiredMixin(UserPassesTestMixin):
 # --- VIEWS PRINCIPAIS ---
 
 # 1. View para Listagem de Eventos (Home Page Funcional)
-class EventListView(ListView):
+class EventListView(LoginRequiredMixin, ListView):
     """Lista todos os eventos disponíveis."""
     model = Evento
     template_name = 'events/event_list.html'
@@ -78,7 +78,20 @@ class EventDetailView(DetailView):
                 context['is_certificado_emitido'] = inscricao.certificado_emitido
 
         return context
+    
+class EventUpdateView(LoginRequiredMixin, OrganizadorRequiredMixin, UpdateView):
+    """
+    Permite que o organizador responsável edite um evento existente.
+    """
+    model = Evento
+    form_class = EventForm
+    template_name = 'events/event_form.html'  # Vamos reutilizar o mesmo template do formulário
+    success_url = reverse_lazy('events:event_list')
 
+    def get_queryset(self):
+        # Medida de segurança: Garante que um organizador só possa editar os seus próprios eventos.
+        return super().get_queryset().filter(organizador_responsavel=self.request.user)
+ 
 # --- FUNÇÃO DE INSCRIÇÃO (Função 3) ---
 
 from django.views.decorators.http import require_POST

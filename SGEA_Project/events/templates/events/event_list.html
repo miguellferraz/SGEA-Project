@@ -27,14 +27,19 @@
     <main class="container mx-auto p-4 md:p-8">
         <div class="flex justify-between items-center mb-6 border-b pb-3">
             <h2 class="text-3xl font-bold text-gray-800">Eventos Disponíveis</h2>
-            
+
             {% if user.is_authenticated and user.perfil == 'ORGANIZADOR' %}
-                <a href="{% url 'events:event_create' %}" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                    </svg>
-                    <span>Criar Evento</span>
-                </a>
+                <div class="flex space-x-2">
+                    <a href="{% url 'events:my_event_list' %}" class="flex items-center space-x-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-200">
+                        <span>Meus Eventos</span>
+                    </a>
+                    <a href="{% url 'events:event_create' %}" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Criar Evento</span>
+                    </a>
+                </div>
             {% endif %}
         </div>
 
@@ -42,16 +47,23 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for evento in object_list %}
                     <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-gray-200">
-                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ evento.tipo_evento }}</h3>
-                        <p class="text-gray-500 text-sm mb-4">Por: {{ evento.organizador_responsavel.username }}</p>
+                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ evento.nome_evento }}</h3>
+
+                        <p class="text-gray-500 text-sm mb-4">Apresentador: {{ evento.apresentador }}</p>
 
                         <div class="space-y-1 text-sm text-gray-700">
                             <p><strong>Local:</strong> {{ evento.local }}</p>
-                            <p><strong>Início:</strong> {{ evento.data_inicial|date:"d/m/Y" }} às {{ evento.horario }}</p>
-                            <p><strong>Fim:</strong> {{ evento.data_final|date:"d/m/Y" }}</p>
+
+                            {% if evento.data_inicial == evento.data_final %}
+                                <p><strong>Data:</strong> {{ evento.data_inicial|date:"d/m/Y" }}</p>
+                            {% else %}
+                                <p><strong>Período:</strong> {{ evento.data_inicial|date:"d/m/Y" }} a {{ evento.data_final|date:"d/m/Y" }}</p>
+                            {% endif %}
+                            <p><strong>Horário:</strong> {{ evento.horario_inicio|time:"H:i" }} - {{ evento.horario_fim|time:"H:i" }}</p>
+
                             <p><strong>Vagas:</strong> {{ evento.qtd_participantes }}</p>
                         </div>
-                        
+
                         <div class="mt-4">
                             <a href="{% url 'events:event_detail' pk=evento.pk %}" class="w-full inline-block text-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition duration-200">
                                 Ver Detalhes e Inscrever-se
