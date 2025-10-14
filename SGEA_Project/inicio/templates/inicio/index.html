@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGEA - {{ title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        nav { background-color: #4f46e5; }
+    </style>
+</head>
+<body>
+    <!-- Barra de Navegação (Protótipo) -->
+    <nav class="p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'inicio:home' %}" class="text-2xl font-bold text-white">SGEA</a>
+            <div class="space-x-4">
+                {% if is_authenticated %}
+                    <span class="text-white text-sm">Olá, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-150">Sair</a>
+                    
+                    {% if user.perfil == 'ORGANIZADOR' %}
+                        <a href="{% url 'admin:index' %}" class="px-3 py-2 text-indigo-100 border border-indigo-100 rounded-lg hover:bg-indigo-700 transition duration-150">Admin</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="px-3 py-2 text-white border border-white rounded-lg hover:bg-white hover:text-indigo-700 transition duration-150">Login</a>
+                    <a href="{% url 'register' %}" class="px-3 py-2 text-indigo-700 bg-white rounded-lg font-semibold hover:bg-gray-100 transition duration-150">Cadastre-se</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mx-auto mt-10 p-4">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-gray-800 mb-4">Gerencie e Participe de Eventos Acadêmicos</h1>
+            <p class="text-xl text-gray-600">Seminários, Palestras e Minicursos ao seu alcance.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <p class="text-4xl text-indigo-500 mb-3">🎓</p>
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Para Alunos</h2>
+                <p class="text-gray-500">Inscreva-se rapidamente em atividades e baixe seus certificados.</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <p class="text-4xl text-indigo-500 mb-3">👨‍🏫</p>
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Para Professores</h2>
+                <p class="text-gray-500">Acompanhe eventos da sua área e participe de seminários.</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <p class="text-4xl text-indigo-500 mb-3">⚙️</p>
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Para Organizadores</h2>
+                <p class="text-gray-500">Crie, gerencie participantes e emita certificados de forma centralizada.</p>
+            </div>
+        </div>
+
+        <div class="mt-12 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Próximos Eventos (Protótipo)</h2>
+            <!-- Este bloco será preenchido na próxima fase de implementação -->
+            <p class="text-gray-500">A listagem de eventos será implementada no App 'events'.</p>
+            <a href="{% url 'register' %}" class="mt-4 inline-block px-8 py-3 bg-indigo-600 text-white text-lg font-bold rounded-full shadow-lg hover:bg-indigo-700 transition duration-300">
+                Comece Agora!
+            </a>
+        </div>
+    </main>
+</body>
+</html>

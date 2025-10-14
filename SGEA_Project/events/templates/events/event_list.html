@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGEA - Eventos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body class="bg-gray-100">
+    <nav class="p-4 shadow-lg flex justify-between items-center text-white bg-indigo-700">
+        <h1 class="text-xl font-bold">Sistema de Gestão de Eventos Acadêmicos (SGEA)</h1>
+        <div>
+            {% if user.is_authenticated %}
+                <span class="text-sm mr-4">Olá, {{ user.username }} ({{ user.perfil }})</span>
+                <a href="{% url 'logout' %}" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition duration-200">Sair</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm transition duration-200">Entrar / Cadastrar</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <div class="flex justify-between items-center mb-6 border-b pb-3">
+            <h2 class="text-3xl font-bold text-gray-800">Eventos Disponíveis</h2>
+            
+            {% if user.is_authenticated and user.perfil == 'ORGANIZADOR' %}
+                <a href="{% url 'events:event_create' %}" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Criar Evento</span>
+                </a>
+            {% endif %}
+        </div>
+
+        {% if object_list %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for evento in object_list %}
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-gray-200">
+                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ evento.tipo_evento }}</h3>
+                        <p class="text-gray-500 text-sm mb-4">Por: {{ evento.organizador_responsavel.username }}</p>
+
+                        <div class="space-y-1 text-sm text-gray-700">
+                            <p><strong>Local:</strong> {{ evento.local }}</p>
+                            <p><strong>Início:</strong> {{ evento.data_inicial|date:"d/m/Y" }} às {{ evento.horario }}</p>
+                            <p><strong>Fim:</strong> {{ evento.data_final|date:"d/m/Y" }}</p>
+                            <p><strong>Vagas:</strong> {{ evento.qtd_participantes }}</p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="{% url 'events:event_detail' pk=evento.pk %}" class="w-full inline-block text-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition duration-200">
+                                Ver Detalhes e Inscrever-se
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-12 bg-white rounded-xl shadow-md">
+                <p class="text-gray-500 text-lg">Nenhum evento disponível no momento.</p>
+                {% if user.is_authenticated and user.perfil == 'ORGANIZADOR' %}
+                    <p class="mt-4">Clique em "Criar Evento" para começar.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

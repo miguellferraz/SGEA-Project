@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Estilo para links de navegação globais */
+a {
+    transition: color 0.2s;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0;
+}
+
+.errorlist li {
+    padding: 8px;
+    background-color: #fee2e2; /* red-100 */
+    color: #b91c1c; /* red-700 */
+    border-radius: 8px; /* rounded-lg */
+    font-size: 0.875rem; /* text-sm */
+    border: 1px solid #fecaca; /* border-red-200 */
+}
+
+.error-text {
+    margin-top: 4px;
+    font-size: 0.875rem; /* text-sm */
+    color: #dc2626; /* red-600 */
+}
+
+/* Regra para garantir que inputs usem a largura total (mesmo que sem Tailwind) */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+    width: 100%;
+}
