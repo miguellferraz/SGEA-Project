@@ -9,4 +9,5 @@ urlpatterns = [
     path('criar/', views.EventCreateView.as_view(), name='event_create'),
     path('<int:pk>/', views.EventDetailView.as_view(), name='event_detail'),
     path('<int:pk>/inscrever/', views.enroll_event, name='enroll_event'),
+    path('inscricao/<int:inscricao_id>/emitir_certificado/', views.emitir_certificado, name='emitir_certificado'),
 ]

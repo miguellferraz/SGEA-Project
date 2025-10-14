@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.db.models import Count # Import necessário para contagem de inscritos
 
-from .models import Evento, Inscricao
+from .models import Evento, Inscricao, Usuario
 from .forms import EventForm
 
 # Mixin de permissão para Organizadores
@@ -115,4 +115,25 @@ def enroll_event(request, pk):
         messages.error(request, f"Ocorreu um erro ao tentar inscrever: {e}")
 
     return redirect('events:event_detail', pk=pk)
+
+@login_required
+@require_POST
+def emitir_certificado(request, inscricao_id):
+    """
+    View para o organizador emitir um certificado para um usuário inscrito.
+    """
+    inscricao = get_object_or_404(Inscricao, id=inscricao_id)
+    evento = inscricao.evento
+    
+    # Garante que apenas o organizador do evento possa emitir
+    if request.user != evento.organizador_responsavel:
+        messages.error(request, "Você não tem permissão para emitir certificados para este evento.")
+        return redirect('events:event_detail', pk=evento.pk)
+
+    # Emite o certificado
+    inscricao.certificado_emitido = True
+    inscricao.save()
+    
+    messages.success(request, f"Certificado para {inscricao.usuario.username} emitido com sucesso!")
+    return redirect('events:event_detail', pk=evento.pk)
 
