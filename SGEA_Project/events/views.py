@@ -6,6 +6,16 @@ from django.urls import reverse_lazy
 from django.db.models import Count, Q
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
+import os
+from django.conf import settings
 
 from .models import Evento, Inscricao, Usuario
 from .forms import EventForm
@@ -38,6 +48,13 @@ class MyEventListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(Q(nome_evento__icontains=query) | Q(apresentador__icontains=query) | Q(tipo_evento__icontains=query)).distinct()
         return queryset
 
+class MyInscriptionsListView(LoginRequiredMixin, ListView):
+    model = Inscricao
+    template_name = 'events/my_inscriptions.html'
+    context_object_name = 'inscricoes_list'
+    def get_queryset(self):
+        return Inscricao.objects.filter(usuario=self.request.user).order_by('evento__data')
+
 class EventCreateView(LoginRequiredMixin, OrganizadorRequiredMixin, CreateView):
     model = Evento
     form_class = EventForm
@@ -63,6 +80,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         context['is_certificado_emitido'] = False
         if user.is_authenticated:
             inscricao = Inscricao.objects.filter(usuario=user, evento=evento).first()
+            context['inscricao'] = inscricao  # <-- PEQUENA ADIÇÃO AQUI
             if inscricao:
                 context['is_inscrito'] = True
                 context['is_certificado_emitido'] = inscricao.certificado_emitido
@@ -75,13 +93,6 @@ class EventUpdateView(LoginRequiredMixin, OrganizadorRequiredMixin, UpdateView):
     success_url = reverse_lazy('events:event_list')
     def get_queryset(self):
         return super().get_queryset().filter(organizador_responsavel=self.request.user)
-
-class MyInscriptionsListView(LoginRequiredMixin, ListView):
-    model = Inscricao
-    template_name = 'events/my_inscriptions.html'
-    context_object_name = 'inscricoes_list'
-    def get_queryset(self):
-        return Inscricao.objects.filter(usuario=self.request.user).order_by('evento__data')
 
 @login_required
 @require_POST
@@ -120,3 +131,94 @@ def emitir_certificado(request, inscricao_id):
     inscricao.save()
     messages.success(request, f"Certificado para {inscricao.usuario.username} emitido com sucesso!")
     return redirect('events:event_detail', pk=evento.pk)
+
+# --- NOVA VIEW DE GERAÇÃO DE PDF ---
+@login_required
+def generate_certificate_pdf(request, inscricao_id):
+    inscricao = get_object_or_404(Inscricao, id=inscricao_id)
+
+    if not inscricao.certificado_emitido:
+        messages.error(request, "Este certificado ainda não foi emitido.")
+        return redirect('events:my_inscriptions')
+    if request.user != inscricao.usuario and request.user != inscricao.evento.organizador_responsavel:
+        messages.error(request, "Você não tem permissão para baixar este certificado.")
+        return redirect('events:my_inscriptions')
+
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    # --- INÍCIO DAS CORREÇÕES ---
+
+    # 1. REMOVIDO: O código que criava o fundo azul foi apagado. O fundo agora será branco por padrão.
+
+    # 2. Cor do texto principal
+    p.setFillColor(colors.darkblue)
+
+    # 3. CORRIGIDO: Adicionado 'preserveAspectRatio=True' para não esticar a logo
+    logo_path = os.path.join(settings.BASE_DIR, 'sgea_core', 'static', 'images', 'logo.png')
+    try:
+        # A imagem terá no máximo 1 polegada de altura, e a largura será ajustada automaticamente para manter a proporção.
+        # O 'anchor="n"' garante que a imagem seja centralizada a partir do seu ponto central superior.
+        p.drawImage(logo_path, width / 2, height - 1.5 * inch, height=1*inch, preserveAspectRatio=True, anchor='n', mask='auto')
+    except:
+        # Se não encontrar o logo, não faz nada e continua a gerar o PDF.
+        pass
+
+    # Título
+    p.setFont("Helvetica-Bold", 36)
+    p.drawCentredString(width / 2.0, height - 2.5 * inch, "Certificado")
+
+    # Linha decorativa
+    p.setStrokeColor(colors.lightgrey)
+    p.setLineWidth(2)
+    p.line(1.5 * inch, height - 2.7 * inch, width - 1.5 * inch, height - 2.7 * inch)
+
+    # Corpo do Texto com Quebra de Linha Automática
+    styles = getSampleStyleSheet()
+    style_body = ParagraphStyle(
+        'body',
+        parent=styles['Normal'],
+        fontName='Helvetica',
+        fontSize=14,
+        leading=22,
+        alignment=1,  # Centralizado
+    )
+
+    aluno_nome = inscricao.usuario.get_full_name() or inscricao.usuario.username
+    evento_nome = inscricao.evento.nome_evento
+    evento_data = inscricao.evento.data.strftime('%d de %B de %Y')
+
+    text = f"""
+        Certificamos que <b>{aluno_nome}</b> participou do evento
+        <br/><br/>
+        <b>"{evento_nome}"</b>
+        <br/><br/>
+        realizado em {evento_data}.
+    """
+
+    p_text = Paragraph(text, style_body)
+    p_text.wrapOn(p, width - 3 * inch, height)
+    p_text.drawOn(p, 1.5 * inch, height - 5 * inch)
+
+    # Assinatura (simulada)
+    p.setFont("Helvetica-Oblique", 12)
+    p.drawCentredString(width / 2.0, 2 * inch, "_________________________")
+    p.setFont("Helvetica-Bold", 12)
+    p.drawCentredString(width / 2.0, 1.8 * inch, "SGEA - Organização de Eventos")
+
+    # Rodapé
+    p.setFont("Helvetica", 9)
+    p.setFillColor(colors.grey)
+    p.drawCentredString(width / 2.0, 0.5 * inch, f"ID do Certificado: {inscricao.id}-{inscricao.evento.id}-{inscricao.usuario.id}")
+
+    # --- FIM DAS CORREÇÕES ---
+
+    p.showPage()
+    p.save()
+
+    buffer.seek(0)
+    filename = f"certificado-{aluno_nome.replace(' ', '-')}-{evento_nome.replace(' ', '-')}.pdf"
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{filename}"'
+    return response

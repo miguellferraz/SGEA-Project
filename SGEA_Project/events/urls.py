@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/inscrever/', views.enroll_event, name='enroll_event'),
     path('minhas-inscricoes/', views.MyInscriptionsListView.as_view(), name='my_inscriptions'),
     path('inscricao/<int:inscricao_id>/emitir_certificado/', views.emitir_certificado, name='emitir_certificado'),
+    path('inscricao/<int:inscricao_id>/certificado/', views.generate_certificate_pdf, name='generate_certificate'),
 ]

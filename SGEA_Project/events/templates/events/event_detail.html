@@ -7,6 +7,7 @@
     <title>SGEA - Detalhes do Evento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
     <nav class="p-4 shadow-lg">
@@ -41,7 +42,11 @@
                 {% if user.is_authenticated %}
                     {% if is_inscrito %}
                         <p class="text-green-600 font-bold text-lg flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Você já está inscrito neste evento!</p>
-                        {% if is_certificado_emitido %}<p class="mt-2 text-indigo-600 font-medium">✅ Certificado Emitido.</p>{% endif %}
+                        {% if is_certificado_emitido %}
+                            <p class="mt-2">
+                                <a href="{% url 'events:generate_certificate' inscricao_id=inscricao.id %}" target="_blank" class="text-indigo-600 font-medium hover:text-indigo-500">✅ Baixar Certificado</a>
+                            </p>
+                        {% endif %}
 
                     {% elif vagas_disponiveis == 0 %}
                         <p class="text-red-600 font-bold text-lg">Evento Lotado!</p>
