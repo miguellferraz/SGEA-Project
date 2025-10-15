@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
 
-# Define o namespace
 app_name = 'events'
 
 urlpatterns = [

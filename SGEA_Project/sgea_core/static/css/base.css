@@ -25,13 +25,12 @@ main {
     flex-grow: 1; 
 }
 
-/* Estiliza os inputs e botões com as novas cores */
 .btn-primary {
     background-color: var(--sgea-blue);
     color: white;
 }
 .btn-primary:hover {
-    background-color: #1a256a; /* Um tom de azul mais escuro */
+    background-color: #1a256a;
 }
 
 h1, h2, h3, .text-primary {
@@ -46,12 +45,10 @@ a:hover {
     color: var(--sgea-gold);
 }
 
-/* Outros estilos... */
 .errorlist { list-style: none; padding: 0; margin: 8px 0; }
 .errorlist li { padding: 8px; background-color: #fee2e2; color: #b91c1c; border-radius: 8px; font-size: 0.875rem; border: 1px solid #fecaca; }
 .error-text { margin-top: 4px; font-size: 0.875rem; color: #dc2626; }
 
-/* Estilos para os campos de formulário */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -61,8 +58,8 @@ input[type="time"],
 select {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #d1d5db; /* border-gray-300 */
-    border-radius: 0.5rem; /* rounded-lg */
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
     outline: none;
     transition: box-shadow 0.2s;
 }

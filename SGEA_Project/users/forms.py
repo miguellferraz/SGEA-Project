@@ -3,9 +3,7 @@ from .models import Usuario
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
-        # Usa o modelo Usuario personalizado
         model = Usuario
-        # Inclui os campos padrão necessários e os campos personalizados
         fields = (
             'username', 
             'email', 
@@ -14,15 +12,12 @@ class CustomUserCreationForm(UserCreationForm):
             'instituicao_ensino', 
             'perfil'
         )
-        # Define rótulos amigáveis para alguns campos
         labels = {
             'username': 'Nome de Usuário (Login)',
             'email': 'E-mail (Opcional)',
             'first_name': 'Nome Completo',
         }
 
-    # Você pode adicionar lógica de validação aqui, se necessário.
-    # Por exemplo, garantir que 'instituicao_ensino' seja preenchido se o perfil for ALUNO ou PROFESSOR.
     def clean(self):
         cleaned_data = super().clean()
         perfil = cleaned_data.get("perfil")

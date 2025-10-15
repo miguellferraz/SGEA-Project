@@ -15,6 +15,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph
 import os
+import locale
 from django.conf import settings
 
 from .models import Evento, Inscricao, Usuario
@@ -80,7 +81,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         context['is_certificado_emitido'] = False
         if user.is_authenticated:
             inscricao = Inscricao.objects.filter(usuario=user, evento=evento).first()
-            context['inscricao'] = inscricao  # <-- PEQUENA ADIÇÃO AQUI
+            context['inscricao'] = inscricao 
             if inscricao:
                 context['is_inscrito'] = True
                 context['is_certificado_emitido'] = inscricao.certificado_emitido
@@ -105,7 +106,7 @@ def enroll_event(request, pk):
     if user.get_full_name() == evento.apresentador:
         messages.error(request, "Você é o apresentador e não pode se inscrever no próprio evento.")
         return redirect('events:event_detail', pk=pk)
-    if user.perfil == 'ORGANIZADOR':
+    if user == evento.organizador_responsavel:
         messages.error(request, "Organizadores não podem se inscrever em eventos.")
         return redirect('events:event_detail', pk=pk)
     inscritos_atuais = Inscricao.objects.filter(evento=evento).count()
@@ -132,7 +133,6 @@ def emitir_certificado(request, inscricao_id):
     messages.success(request, f"Certificado para {inscricao.usuario.username} emitido com sucesso!")
     return redirect('events:event_detail', pk=evento.pk)
 
-# --- NOVA VIEW DE GERAÇÃO DE PDF ---
 @login_required
 def generate_certificate_pdf(request, inscricao_id):
     inscricao = get_object_or_404(Inscricao, id=inscricao_id)
@@ -159,12 +159,10 @@ def generate_certificate_pdf(request, inscricao_id):
     p.setFont("Helvetica-Bold", 36)
     p.drawCentredString(width / 2.0, height - 2.5 * inch, "Certificado")
 
-    # Linha decorativa
     p.setStrokeColor(colors.lightgrey)
     p.setLineWidth(2)
     p.line(1.5 * inch, height - 2.7 * inch, width - 1.5 * inch, height - 2.7 * inch)
 
-    # Corpo do Texto com Quebra de Linha Automática (usando Paragraph)
     styles = getSampleStyleSheet()
     style_body = ParagraphStyle(
         'body',
@@ -172,12 +170,19 @@ def generate_certificate_pdf(request, inscricao_id):
         fontName='Helvetica',
         fontSize=14,
         leading=22,
-        alignment=1,  # 0=Left, 1=Center, 2=Right
+        alignment=1,
     )
+
+    try:
+        # Define o locale para Português do Brasil para formatar o mês
+        locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
+    except locale.Error:
+        # Fallback caso o locale não esteja instalado no sistema
+        locale.setlocale(locale.LC_TIME, '')
 
     aluno_nome = inscricao.usuario.get_full_name() or inscricao.usuario.username
     evento_nome = inscricao.evento.nome_evento
-    evento_data = inscricao.evento.data.strftime('%d de %B de %Y') # Formato de data mais elegante
+    evento_data = inscricao.evento.data.strftime('%d de %B de %Y')
 
     text = f"""
         Certificamos que <b>{aluno_nome}</b> participou do evento
@@ -188,21 +193,17 @@ def generate_certificate_pdf(request, inscricao_id):
     """
 
     p_text = Paragraph(text, style_body)
-    p_text.wrapOn(p, width - 3 * inch, height) # Define a área do parágrafo
-    p_text.drawOn(p, 1.5 * inch, height - 5 * inch) # Desenha o parágrafo
+    p_text.wrapOn(p, width - 3 * inch, height)
+    p_text.drawOn(p, 1.5 * inch, height - 5 * inch)
 
-    # Assinatura (simulada)
     p.setFont("Helvetica-Oblique", 12)
     p.drawCentredString(width / 2.0, 2 * inch, "_________________________")
     p.setFont("Helvetica-Bold", 12)
     p.drawCentredString(width / 2.0, 1.8 * inch, "SGEA - Organização de Eventos")
 
-    # Rodapé
     p.setFont("Helvetica", 9)
     p.setFillColor(colors.grey)
     p.drawCentredString(width / 2.0, 0.5 * inch, f"ID do Certificado: {inscricao.id}-{inscricao.evento.id}-{inscricao.usuario.id}")
-
-    # --- FIM DA ESTILIZAÇÃO ---
 
     p.showPage()
     p.save()
@@ -210,5 +211,5 @@ def generate_certificate_pdf(request, inscricao_id):
     buffer.seek(0)
     filename = f"certificado-{aluno_nome.replace(' ', '-')}-{evento_nome.replace(' ', '-')}.pdf"
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="{filename}"'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response

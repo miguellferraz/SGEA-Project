@@ -13,40 +13,43 @@
     {% include 'inicio/partials/header.html' %}
     <main class="container mx-auto p-4 md:p-8">
         <div class="flex justify-between items-center mb-6 border-b pb-3">
-            <h2 class="text-3xl font-bold text-gray-800">Eventos Disponíveis</h2>
+            <h2 class="text-3xl font-bold" style="color: var(--sgea-blue);">Eventos Disponíveis</h2>
             {% if user.is_authenticated %}
                 {% if user.perfil == 'ORGANIZADOR' %}
                     <div class="flex space-x-2">
-                        <a href="{% url 'events:my_event_list' %}" class="flex items-center space-x-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-200"><span>Meus Eventos</span></a>
-                        <a href="{% url 'events:event_create' %}" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" /></svg><span>Criar Evento</span></a>
+                        <a href="{% url 'events:my_inscriptions' %}" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg text-sm font-semibold hover:bg-gray-100 transition duration-150">Minhas Inscrições</a>
+                        <a href="{% url 'events:my_event_list' %}" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg text-sm font-semibold hover:bg-gray-100 transition duration-150">Meus Eventos</a>
+                        <a href="{% url 'events:event_create' %}" class="px-4 py-2 text-white rounded-lg text-sm font-semibold transition duration-150" style="background-color: var(--sgea-blue);" onmouseover="this.style.backgroundColor='#1a256a'" onmouseout="this.style.backgroundColor='var(--sgea-blue)'">Criar Evento</a>
                     </div>
                 {% elif user.perfil == 'ALUNO' or user.perfil == 'PROFESSOR' %}
-                    <a href="{% url 'events:my_inscriptions' %}" class="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow-md transition duration-200"><span>Minhas Inscrições</span></a>
+                    <a href="{% url 'events:my_inscriptions' %}" class="px-4 py-2 text-white rounded-lg text-sm font-semibold transition duration-150" style="background-color: var(--sgea-blue);" onmouseover="this.style.backgroundColor='#1a256a'" onmouseout="this.style.backgroundColor='var(--sgea-blue)'">Minhas Inscrições</a>
                 {% endif %}
             {% endif %}
         </div>
+
         <div class="mb-8">
             <form method="get" action="" class="flex items-center w-full max-w-lg mx-auto">
-                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por nome, apresentador ou tipo..." class="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-r-lg">
+                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por nome, apresentador ou tipo...">
+                <button type="submit" class="p-3 text-white rounded-r-lg" style="background-color: var(--sgea-blue);" onmouseover="this.style.backgroundColor='#1a256a'" onmouseout="this.style.backgroundColor='var(--sgea-blue)'">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
             </form>
         </div>
+
         {% if object_list %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for evento in object_list %}
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-gray-200">
-                        <h3 class="text-xl font-semibold text-indigo-700 mb-2">{{ evento.nome_evento }}</h3>
+                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 border border-gray-200 flex flex-col">
+                        <h3 class="text-xl font-semibold mb-2" style="color: var(--sgea-blue);">{{ evento.nome_evento }}</h3>
                         <p class="text-gray-500 text-sm mb-4">Apresentador: {{ evento.apresentador }}</p>
-                        <div class="space-y-1 text-sm text-gray-700">
+                        <div class="space-y-1 text-sm text-gray-700 flex-grow">
                             <p><strong>Local:</strong> {{ evento.local }}</p>
                             <p><strong>Data:</strong> {{ evento.data|date:"d/m/Y" }}</p>
                             <p><strong>Horário:</strong> {{ evento.horario_inicio|time:"H:i" }} - {{ evento.horario_fim|time:"H:i" }}</p>
                             <p><strong>Vagas:</strong> {{ evento.qtd_participantes }}</p>
                         </div>
                         <div class="mt-4">
-                            <a href="{% url 'events:event_detail' pk=evento.pk %}" class="w-full inline-block text-center bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition duration-200">Ver Detalhes e Inscrever-se</a>
+                            <a href="{% url 'events:event_detail' pk=evento.pk %}" class="w-full inline-block text-center text-white font-medium py-2 rounded-lg transition duration-200" style="background-color: var(--sgea-blue);" onmouseover="this.style.backgroundColor='#1a256a'" onmouseout="this.style.backgroundColor='var(--sgea-blue)'">Ver Detalhes</a>
                         </div>
                     </div>
                 {% endfor %}

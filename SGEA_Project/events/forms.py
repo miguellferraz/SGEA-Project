@@ -5,8 +5,6 @@ class EventForm(forms.ModelForm):
     
     class Meta:
         model = Evento
-        # Apenas os campos preenchidos pelo usuário são listados.
-        # 'organizador_responsavel' será preenchido automaticamente na View.
         fields = [
             'nome_evento', 
             'apresentador',    
@@ -18,7 +16,6 @@ class EventForm(forms.ModelForm):
             'qtd_participantes'
         ]
         
-        # Adiciona widgets para melhor UX no HTML (Ex: DateField usa um seletor de data)
         widgets = {
             'nome_evento': forms.TextInput(attrs={'placeholder': 'Ex: Semana da Computação'}),
             'apresentador': forms.TextInput(attrs={'placeholder': 'Ex: Dr. Fulano de Tal'}),
