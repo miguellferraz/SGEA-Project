@@ -1,19 +1,13 @@
-/* sgea_core/static/css/base.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
-/* --- ESTILO CORRIGIDO E UNIFICADO --- */
 html {
     height: 100%;
 }
 
 body {
-    /* Estilos do Footer Pegajoso */
     display: flex;
     flex-direction: column;
     min-height: 100%;
-
-    /* Estilos Gerais do Body */
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
@@ -23,16 +17,13 @@ body {
 }
 
 main {
-    flex-grow: 1; /* Faz o conteúdo principal empurrar o footer para baixo */
+    flex-grow: 1; 
 }
-/* --- FIM DA CORREÇÃO --- */
-
 
 nav { 
     background-color: #4f46e5; 
 }
 
-/* Estilo para links de navegação globais */
 a {
     transition: color 0.2s;
 }
@@ -45,22 +36,47 @@ a {
 
 .errorlist li {
     padding: 8px;
-    background-color: #fee2e2; /* red-100 */
-    color: #b91c1c; /* red-700 */
-    border-radius: 8px; /* rounded-lg */
-    font-size: 0.875rem; /* text-sm */
-    border: 1px solid #fecaca; /* border-red-200 */
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    border: 1px solid #fecaca;
 }
 
 .error-text {
     margin-top: 4px;
-    font-size: 0.875rem; /* text-sm */
-    color: #dc2626; /* red-600 */
+    font-size: 0.875rem;
+    color: #dc2626;
 }
 
-/* Regra para garantir que inputs usem a largura total (mesmo que sem Tailwind) */
 input:not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
     width: 100%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    outline: none;
+    transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+select:focus {
+    box-shadow: 0 0 0 2px #6366f1; /* indigo-500 */
+    border-color: #6366f1; /* indigo-500 */
 }

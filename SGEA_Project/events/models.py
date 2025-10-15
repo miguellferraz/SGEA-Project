@@ -10,8 +10,8 @@ class Evento(models.Model):
         ('SEMANA', 'Semana Acadêmica'),
     )
 
-    nome_evento = models.CharField(max_length=255, default="Nome do Evento")
-    apresentador = models.CharField(max_length=255, default="A Definir")
+    nome_evento = models.CharField(max_length=255)
+    apresentador = models.CharField(max_length=255)
     tipo_evento = models.CharField(max_length=50, choices=TIPO_CHOICES)
     data = models.DateField()
     horario_inicio = models.TimeField()

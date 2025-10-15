@@ -11,5 +11,6 @@ urlpatterns = [
     path('<int:pk>/', views.EventDetailView.as_view(), name='event_detail'),
     path('<int:pk>/editar/', views.EventUpdateView.as_view(), name='event_update'),
     path('<int:pk>/inscrever/', views.enroll_event, name='enroll_event'),
+    path('minhas-inscricoes/', views.MyInscriptionsListView.as_view(), name='my_inscriptions'),
     path('inscricao/<int:inscricao_id>/emitir_certificado/', views.emitir_certificado, name='emitir_certificado'),
 ]

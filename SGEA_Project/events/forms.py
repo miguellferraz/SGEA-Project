@@ -20,6 +20,8 @@ class EventForm(forms.ModelForm):
         
         # Adiciona widgets para melhor UX no HTML (Ex: DateField usa um seletor de data)
         widgets = {
+            'nome_evento': forms.TextInput(attrs={'placeholder': 'Ex: Semana da Computação'}),
+            'apresentador': forms.TextInput(attrs={'placeholder': 'Ex: Dr. Fulano de Tal'}),
             'data': forms.DateInput(attrs={'type': 'date'}),
             'horario_inicio': forms.TimeInput(attrs={'type': 'time'}), # Alterado
             'horario_fim': forms.TimeInput(attrs={'type': 'time'}),

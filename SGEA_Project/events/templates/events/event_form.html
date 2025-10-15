@@ -8,98 +8,47 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
-{% include 'inicio/partials/footer.html' %}
-<body class="bg-gray-100">
-    <nav class="p-4 shadow-lg flex justify-between items-center text-white bg-indigo-700">
-        <h1 class="text-xl font-bold">SGEA - Formulário de Evento</h1>
-        <a href="{% url 'events:event_list' %}" class="text-sm hover:text-indigo-200">← Voltar para Eventos</a>
+<body>
+    <nav class="p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'inicio:home' %}" class="text-2xl font-bold text-white">SGEA</a>
+            <div class="space-x-4">
+                {% if user.is_authenticated %}
+                    <span class="text-white text-sm">Olá, {{ user.username }} ({{ user.perfil }})!</span>
+                    <form class="inline" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition duration-200">Sair</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="px-3 py-2 text-white border border-white rounded-lg hover:bg-white hover:text-indigo-700 transition duration-150">Login</a>
+                    <a href="{% url 'register' %}" class="px-3 py-2 text-indigo-700 bg-white rounded-lg font-semibold hover:bg-gray-100 transition duration-150">Cadastre-se</a>
+                {% endif %}
+            </div>
+        </div>
     </nav>
-
-    <main class="flex items-center justify-center min-h-screen pt-10 pb-10">
-        <div class="w-full max-w-3xl bg-white p-8 md:p-10 rounded-xl shadow-2xl border border-gray-100">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">Dados do Evento</h2>
-
+    <main class="container mx-auto p-4 md:p-8">
+        <div class="w-full max-w-3xl mx-auto bg-white p-8 md:p-10 rounded-xl shadow-2xl border border-gray-100">
+            <div class="flex justify-between items-center mb-6 border-b pb-3">
+                <h2 class="text-3xl font-bold text-gray-800">Dados do Evento</h2>
+                <a href="{% url 'events:event_list' %}" class="text-sm text-indigo-600 hover:text-indigo-800">← Voltar para Eventos</a>
+            </div>
             <form method="post" class="space-y-6">
                 {% csrf_token %}
-
-                {% if form.non_field_errors %}
-                    <div class="errorlist">{{ form.non_field_errors }}</div>
-                {% endif %}
-
+                {% if form.non_field_errors %}<div class="errorlist">{{ form.non_field_errors }}</div>{% endif %}
                 <div class="grid md:grid-cols-2 gap-6">
-
-                    <div class="md:col-span-2">
-                        <label for="{{ form.nome_evento.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.nome_evento.label }}
-                        </label>
-                        {{ form.nome_evento }}
-                        {% if form.nome_evento.errors %}<div class="error-text">{{ form.nome_evento.errors }}</div>{% endif %}
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="{{ form.apresentador.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.apresentador.label }}
-                        </label>
-                        {{ form.apresentador }}
-                        {% if form.apresentador.errors %}<div class="error-text">{{ form.apresentador.errors }}</div>{% endif %}
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="{{ form.tipo_evento.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.tipo_evento.label }}
-                        </label>
-                        {{ form.tipo_evento }}
-                        {% if form.tipo_evento.errors %}<div class="error-text">{{ form.tipo_evento.errors }}</div>{% endif %}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.data.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            Data do Evento
-                        </label>
-                        {{ form.data }}
-                        {% if form.data.errors %}<div class="error-text">{{ form.data.errors }}</div>{% endif %}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.horario_inicio.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            Horário de Início
-                        </label>
-                        {{ form.horario_inicio }}
-                        {% if form.horario_inicio.errors %}<div class="error-text">{{ form.horario_inicio.errors }}</div>{% endif %}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.horario_fim.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            Horário de Fim
-                        </label>
-                        {{ form.horario_fim }}
-                        {% if form.horario_fim.errors %}<div class="error-text">{{ form.horario_fim.errors }}</div>{% endif %}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.qtd_participantes.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.qtd_participantes.label }}
-                        </label>
-                        {{ form.qtd_participantes }}
-                        {% if form.qtd_participantes.errors %}<div class="error-text">{{ form.qtd_participantes.errors }}</div>{% endif %}
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="{{ form.local.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.local.label }}
-                        </label>
-                        {{ form.local }}
-                        {% if form.local.errors %}<div class="error-text">{{ form.local.errors }}</div>{% endif %}
-                    </div>
-
+                    <div class="md:col-span-2"><label for="{{ form.nome_evento.id_for_label }}" class="block text-sm font-medium text-gray-700">Nome do Evento</label>{{ form.nome_evento }}{% if form.nome_evento.errors %}<div class="error-text">{{ form.nome_evento.errors }}</div>{% endif %}</div>
+                    <div class="md:col-span-2"><label for="{{ form.apresentador.id_for_label }}" class="block text-sm font-medium text-gray-700">Apresentador</label>{{ form.apresentador }}{% if form.apresentador.errors %}<div class="error-text">{{ form.apresentador.errors }}</div>{% endif %}</div>
+                    <div class="md:col-span-2"><label for="{{ form.tipo_evento.id_for_label }}" class="block text-sm font-medium text-gray-700">Tipo de Evento</label>{{ form.tipo_evento }}{% if form.tipo_evento.errors %}<div class="error-text">{{ form.tipo_evento.errors }}</div>{% endif %}</div>
+                    <div><label for="{{ form.data.id_for_label }}" class="block text-sm font-medium text-gray-700">Data do Evento</label>{{ form.data }}{% if form.data.errors %}<div class="error-text">{{ form.data.errors }}</div>{% endif %}</div>
+                    <div><label for="{{ form.qtd_participantes.id_for_label }}" class="block text-sm font-medium text-gray-700">Quantidade de Vagas</label>{{ form.qtd_participantes }}{% if form.qtd_participantes.errors %}<div class="error-text">{{ form.qtd_participantes.errors }}</div>{% endif %}</div>
+                    <div><label for="{{ form.horario_inicio.id_for_label }}" class="block text-sm font-medium text-gray-700">Horário de Início</label>{{ form.horario_inicio }}{% if form.horario_inicio.errors %}<div class="error-text">{{ form.horario_inicio.errors }}</div>{% endif %}</div>
+                    <div><label for="{{ form.horario_fim.id_for_label }}" class="block text-sm font-medium text-gray-700">Horário de Fim</label>{{ form.horario_fim }}{% if form.horario_fim.errors %}<div class="error-text">{{ form.horario_fim.errors }}</div>{% endif %}</div>
+                    <div class="md:col-span-2"><label for="{{ form.local.id_for_label }}" class="block text-sm font-medium text-gray-700">Local</label>{{ form.local }}{% if form.local.errors %}<div class="error-text">{{ form.local.errors }}</div>{% endif %}</div>
                 </div>
-
-                <button type="submit" 
-                        class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    Salvar Evento
-                </button>
+                <button type="submit" class="w-full py-3 px-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">Salvar Evento</button>
             </form>
         </div>
     </main>
+    {% include 'inicio/partials/footer.html' %}
 </body>
 </html>
