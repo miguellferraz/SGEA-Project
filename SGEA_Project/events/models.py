@@ -10,19 +10,14 @@ class Evento(models.Model):
         ('SEMANA', 'Semana Acadêmica'),
     )
 
-    nome_evento = models.CharField(max_length=255, default="Nome do Evento") # Adicionado
+    nome_evento = models.CharField(max_length=255, default="Nome do Evento")
     apresentador = models.CharField(max_length=255, default="A Definir")
     tipo_evento = models.CharField(max_length=50, choices=TIPO_CHOICES)
-    data_inicial = models.DateField()
-    data_final = models.DateField()
+    data = models.DateField()
     horario_inicio = models.TimeField()
     horario_fim = models.TimeField()
     local = models.CharField(max_length=255)
     qtd_participantes = models.IntegerField(default=0)
-
-    def __str__(self):
-        # Vamos melhorar a representação do objeto também
-        return self.nome_evento
     
     # FK para o Organizador (relaciona com o modelo Usuario no app 'users')
     organizador_responsavel = models.ForeignKey(
@@ -32,7 +27,7 @@ class Evento(models.Model):
     )
 
     def __str__(self):
-        return f"{self.tipo_evento} em {self.local}"
+        return self.nome_evento
 
 # 2. Modelo Inscrição (Tabela M:N)
 class Inscricao(models.Model):

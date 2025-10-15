@@ -11,8 +11,7 @@ class EventForm(forms.ModelForm):
             'nome_evento', 
             'apresentador',    
             'tipo_evento', 
-            'data_inicial', 
-            'data_final', 
+            'data',
             'horario_inicio',
             'horario_fim',  
             'local', 
@@ -21,8 +20,7 @@ class EventForm(forms.ModelForm):
         
         # Adiciona widgets para melhor UX no HTML (Ex: DateField usa um seletor de data)
         widgets = {
-            'data_inicial': forms.DateInput(attrs={'type': 'date'}),
-            'data_final': forms.DateInput(attrs={'type': 'date'}),
+            'data': forms.DateInput(attrs={'type': 'date'}),
             'horario_inicio': forms.TimeInput(attrs={'type': 'time'}), # Alterado
             'horario_fim': forms.TimeInput(attrs={'type': 'time'}),
         }

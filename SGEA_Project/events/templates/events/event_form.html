@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
+{% include 'inicio/partials/footer.html' %}
 <body class="bg-gray-100">
     <nav class="p-4 shadow-lg flex justify-between items-center text-white bg-indigo-700">
         <h1 class="text-xl font-bold">SGEA - Formulário de Evento</h1>
@@ -52,19 +53,11 @@
                     </div>
 
                     <div>
-                        <label for="{{ form.data_inicial.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.data_inicial.label }}
+                        <label for="{{ form.data.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Data do Evento
                         </label>
-                        {{ form.data_inicial }}
-                        {% if form.data_inicial.errors %}<div class="error-text">{{ form.data_inicial.errors }}</div>{% endif %}
-                    </div>
-
-                    <div>
-                        <label for="{{ form.data_final.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                            {{ form.data_final.label }}
-                        </label>
-                        {{ form.data_final }}
-                        {% if form.data_final.errors %}<div class="error-text">{{ form.data_final.errors }}</div>{% endif %}
+                        {{ form.data }}
+                        {% if form.data.errors %}<div class="error-text">{{ form.data.errors }}</div>{% endif %}
                     </div>
 
                     <div>

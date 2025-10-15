@@ -1,6 +1,19 @@
+/* sgea_core/static/css/base.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
+/* --- ESTILO CORRIGIDO E UNIFICADO --- */
+html {
+    height: 100%;
+}
+
 body {
+    /* Estilos do Footer Pegajoso */
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+
+    /* Estilos Gerais do Body */
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
@@ -8,6 +21,12 @@ body {
     -webkit-font-smoothing: antialiased;
     background-color: #f8fafc; 
 }
+
+main {
+    flex-grow: 1; /* Faz o conteúdo principal empurrar o footer para baixo */
+}
+/* --- FIM DA CORREÇÃO --- */
+
 
 nav { 
     background-color: #4f46e5; 
@@ -45,5 +64,3 @@ select,
 textarea {
     width: 100%;
 }
-
-
