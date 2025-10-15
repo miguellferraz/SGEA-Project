@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
         phoneInput.addEventListener('input', function (e) {
             let value = e.target.value.replace(/\D/g, '');
             value = value.substring(0, 11);
-
             if (value.length > 2) {
                 value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
             }
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Lógica do Autocomplete do Login
     const usernameInput = document.querySelector('input[name="username"]');
     const passwordInput = document.querySelector('input[name="password"]');
-
     if (usernameInput) {
         usernameInput.setAttribute('autocomplete', 'username');
     }
@@ -40,4 +38,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-// A chave extra no final foi removida.
