@@ -10,32 +10,28 @@
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
-    <nav class="p-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="{% url 'inicio:home' %}" class="text-2xl font-bold text-white">SGEA</a>
-            <div class="space-x-4">
-                {% if user.is_authenticated %}
-                    <span class="text-white text-sm">Olá, {{ user.username }} ({{ user.perfil }})!</span>
-                    <form class="inline" method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition duration-200">Sair</button>
-                    </form>
-                {% else %}
-                    <a href="{% url 'login' %}" class="px-3 py-2 text-white border border-white rounded-lg hover:bg-white hover:text-indigo-700 transition duration-150">Login</a>
-                    <a href="{% url 'register' %}" class="px-3 py-2 text-indigo-700 bg-white rounded-lg font-semibold hover:bg-gray-100 transition duration-150">Cadastre-se</a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
+    {% include 'inicio/partials/header.html' %}
     <main class="container mx-auto mt-10 p-4">
         <header class="text-center mb-12">
             <h1 class="text-5xl font-extrabold text-gray-800 mb-4">Gerencie e Participe de Eventos Acadêmicos</h1>
             <p class="text-xl text-gray-600">Seminários, Palestras e Minicursos ao seu alcance.</p>
         </header>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300"><p class="text-4xl text-indigo-500 mb-3">🎓</p><h2 class="text-xl font-semibold mb-2 text-gray-700">Para Alunos</h2><p class="text-gray-500">Inscreva-se rapidamente em atividades e baixe seus certificados.</p></div>
-            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300"><p class="text-4xl text-indigo-500 mb-3">👨‍🏫</p><h2 class="text-xl font-semibold mb-2 text-gray-700">Para Professores</h2><p class="text-gray-500">Acompanhe eventos da sua área e participe de seminários.</p></div>
-            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300"><p class="text-4xl text-indigo-500 mb-3">⚙️</p><h2 class="text-xl font-semibold mb-2 text-gray-700">Para Organizadores</h2><p class="text-gray-500">Crie, gerencie participantes e emita certificados de forma centralizada.</p></div>
+            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <p class="text-4xl text-indigo-500 mb-3">🎓</p>
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Para Alunos</h2>
+                <p class="text-gray-500">Inscreva-se rapidamente em atividades e baixe seus certificados.</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <p class="text-4xl text-indigo-500 mb-3">👨‍🏫</p>
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Para Professores</h2>
+                <p class="text-gray-500">Acompanhe eventos da sua área e participe de seminários.</p>
+            </div>
+            <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                <p class="text-4xl text-indigo-500 mb-3">⚙️</p>
+                <h2 class="text-xl font-semibold mb-2 text-gray-700">Para Organizadores</h2>
+                <p class="text-gray-500">Crie, gerencie participantes e emita certificados de forma centralizada.</p>
+            </div>
         </div>
         <div class="mt-16 text-center">
             <a href="{% url 'events:event_list' %}" class="inline-block px-8 py-4 bg-indigo-600 text-white text-xl font-bold rounded-full shadow-lg hover:bg-indigo-700 transition duration-300">

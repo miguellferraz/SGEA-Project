@@ -1,7 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
-html {
-    height: 100%;
+:root {
+    --sgea-blue: #1E2A78;
+    --sgea-gold: #E4B74C;
+    --sgea-light-gray: #f8fafc;
+}
+
+html { 
+    height: 100%; 
 }
 
 body {
@@ -13,48 +19,39 @@ body {
     padding: 0;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
-    background-color: #f8fafc; 
+    background-color: var(--sgea-light-gray); 
 }
-
-main {
+main { 
     flex-grow: 1; 
 }
 
-nav { 
-    background-color: #4f46e5; 
+/* Estiliza os inputs e botões com as novas cores */
+.btn-primary {
+    background-color: var(--sgea-blue);
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #1a256a; /* Um tom de azul mais escuro */
+}
+
+h1, h2, h3, .text-primary {
+    color: var(--sgea-blue);
 }
 
 a {
+    color: var(--sgea-blue);
     transition: color 0.2s;
 }
-
-.errorlist {
-    list-style: none;
-    padding: 0;
-    margin: 8px 0;
+a:hover {
+    color: var(--sgea-gold);
 }
 
-.errorlist li {
-    padding: 8px;
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    border: 1px solid #fecaca;
-}
+/* Outros estilos... */
+.errorlist { list-style: none; padding: 0; margin: 8px 0; }
+.errorlist li { padding: 8px; background-color: #fee2e2; color: #b91c1c; border-radius: 8px; font-size: 0.875rem; border: 1px solid #fecaca; }
+.error-text { margin-top: 4px; font-size: 0.875rem; color: #dc2626; }
 
-.error-text {
-    margin-top: 4px;
-    font-size: 0.875rem;
-    color: #dc2626;
-}
-
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-    width: 100%;
-}
-
+/* Estilos para os campos de formulário */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -64,10 +61,10 @@ input[type="time"],
 select {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #d1d5db; /* gray-300 */
+    border: 1px solid #d1d5db; /* border-gray-300 */
     border-radius: 0.5rem; /* rounded-lg */
     outline: none;
-    transition: box-shadow 0.15s, border-color 0.15s;
+    transition: box-shadow 0.2s;
 }
 
 input[type="text"]:focus,
@@ -77,6 +74,5 @@ input[type="number"]:focus,
 input[type="date"]:focus,
 input[type="time"]:focus,
 select:focus {
-    box-shadow: 0 0 0 2px #6366f1; /* indigo-500 */
-    border-color: #6366f1; /* indigo-500 */
+    box-shadow: 0 0 0 2px var(--sgea-gold);
 }
