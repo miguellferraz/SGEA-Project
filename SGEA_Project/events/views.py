@@ -3,43 +3,46 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
 from .models import Evento, Inscricao, Usuario
 from .forms import EventForm
 
-# Mixin de permissão para Organizadores
 class OrganizadorRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_authenticated and (self.request.user.is_staff or self.request.user.perfil == 'ORGANIZADOR')
-
     def handle_no_permission(self):
         return redirect(reverse_lazy('events:event_list'))
-
-# --- VIEWS PRINCIPAIS ---
 
 class EventListView(ListView):
     model = Evento
     template_name = 'events/event_list.html'
     context_object_name = 'object_list'
-    ordering = ['data']  # CORRIGIDO AQUI
+    def get_queryset(self):
+        queryset = Evento.objects.all().order_by('data')
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(Q(nome_evento__icontains=query) | Q(apresentador__icontains=query) | Q(tipo_evento__icontains=query)).distinct()
+        return queryset
 
 class MyEventListView(LoginRequiredMixin, ListView):
     model = Evento
     template_name = 'events/event_list.html'
     context_object_name = 'object_list'
-
     def get_queryset(self):
-        return Evento.objects.filter(organizador_responsavel=self.request.user).order_by('data') # CORRIGIDO AQUI
+        queryset = Evento.objects.filter(organizador_responsavel=self.request.user).order_by('data')
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(Q(nome_evento__icontains=query) | Q(apresentador__icontains=query) | Q(tipo_evento__icontains=query)).distinct()
+        return queryset
 
 class EventCreateView(LoginRequiredMixin, OrganizadorRequiredMixin, CreateView):
     model = Evento
     form_class = EventForm
     template_name = 'events/event_form.html'
     success_url = reverse_lazy('events:event_list')
-
     def form_valid(self, form):
         form.instance.organizador_responsavel = self.request.user
         return super().form_valid(form)
@@ -48,7 +51,6 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     model = Evento
     template_name = 'events/event_detail.html'
     context_object_name = 'object'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         evento = self.get_object()
@@ -71,23 +73,15 @@ class EventUpdateView(LoginRequiredMixin, OrganizadorRequiredMixin, UpdateView):
     form_class = EventForm
     template_name = 'events/event_form.html'
     success_url = reverse_lazy('events:event_list')
-
     def get_queryset(self):
         return super().get_queryset().filter(organizador_responsavel=self.request.user)
 
 class MyInscriptionsListView(LoginRequiredMixin, ListView):
-    """
-    Lista os eventos nos quais o usuário (aluno/professor) está inscrito.
-    """
-    model = Inscricao  # O modelo principal agora é a Inscrição
+    model = Inscricao
     template_name = 'events/my_inscriptions.html'
     context_object_name = 'inscricoes_list'
-
     def get_queryset(self):
-        # Filtra as inscrições para pegar apenas as do usuário logado e ordena pela data do evento
         return Inscricao.objects.filter(usuario=self.request.user).order_by('evento__data')
-    
-# --- FUNÇÕES AUXILIARES ---
 
 @login_required
 @require_POST
@@ -101,7 +95,7 @@ def enroll_event(request, pk):
         messages.error(request, "Você é o apresentador e não pode se inscrever no próprio evento.")
         return redirect('events:event_detail', pk=pk)
     if user.perfil == 'ORGANIZADOR':
-        messages.error(request, "Organizadores não podem se inscrever nos próprios eventos.")
+        messages.error(request, "Organizadores não podem se inscrever em eventos.")
         return redirect('events:event_detail', pk=pk)
     inscritos_atuais = Inscricao.objects.filter(evento=evento).count()
     if inscritos_atuais >= evento.qtd_participantes:
