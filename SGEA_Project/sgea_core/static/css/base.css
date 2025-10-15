@@ -21,6 +21,7 @@ body {
     -webkit-font-smoothing: antialiased;
     background-color: var(--sgea-light-gray); 
 }
+
 main { 
     flex-grow: 1; 
 }
